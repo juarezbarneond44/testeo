@@ -1,0 +1,24 @@
+<app-nav-bar></app-nav-bar>
+
+ 
+<br>
+<br>
+ 
+  <app-loading *ngIf='cargando'></app-loading>
+ 
+
+
+<div class="wrappers" *ngFor="let peli of data">
+  <div class="wrapper fadeInDown">
+      <div id="formContent">
+          <a id="foto{{peli.id}}" (click) = "mostrar(peli.id)">
+              <img src="{{peli.image}}" class="fadeIn second" >
+          </a>
+      </div>
+      <p>{{peli.name}} </p>
+</div>
+  
+
+
+
+ 

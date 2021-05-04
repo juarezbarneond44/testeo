@@ -1,0 +1,74 @@
+<app-nav-bar></app-nav-bar>
+<div class="container" *ngIf="!pago" >  
+<ul class="list-group">
+       <li class="list-group-item active text-center">Peliculas a Pagar</li>
+       
+       <div  *ngFor="let item of Items" >
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+              <a ><button type="button" id="eliminar" (click)="eliminar(item.id)" class="btn btn-danger -lg btn-block">Quitar</button></a>
+            </li>
+             <li class="nav-item">
+              <a class="nav-link disabled"  tabindex="1" aria-disabled="true">{{item.name}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" tabindex="1" aria-disabled="true">Precio: Q{{item.precio}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" tabindex="1" aria-disabled="true">Unidades: {{item.cantidad}}</a>
+              </li>
+          </ul>
+    </div>
+    <li class="list-group-item active text-center">Total</li>
+    <li class="list-group-item text-center">${{total}}</li>
+    <button type="button" id="pago"(click)="comprar()" class="btn btn-success">Pagar</button>   
+  </ul>
+</div>
+
+<!-- PAGOO -->
+ 
+<div *ngIf="pago"class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+<form>
+  <div class="form-group">
+  <br>
+  <div class="mb-3">
+      <label for="tarjeta" class="form-label">Numero De La Tarjeta</label>
+      <input type="text" autocomplete="cc-number" class="form-control" [(ngModel)]="datapago.tarjeta" name="tarjeta" id="tarjeta" ccNumber>
+    </div>
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre Del Dueño</label>
+      <input type="text" class="form-control" [(ngModel)]="datapago.nombre"  name="nombre" id="nombre">
+    </div>
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha Expiracion</label>
+      <input type="text" autocomplete="cc-exp" ccExp  [(ngModel)]="datapago.fecha" name="fecha" class="form-control" id="fecha">
+    </div>
+    <div class="mb-3">
+      <label for="codigo" class="form-label">Codigo Verificador</label>
+      <input type="text" autocomplete="off" ccCVC [(ngModel)]="datapago.codigo" name="codigo" class="form-control" id="codigo">
+    </div>
+    <div class="mb-3">
+      <label for="moneda" class="form-label">Conversion Para Pagar</label>
+      <select (click)="cambio()" name="miselect"  id="moneda" [(ngModel)]="seleccionado">
+        <option value="0">Seleccione Conversion</option>
+        <option value="1">1</option>
+        <option    *ngFor="let item of chargeRate" [ngValue]="item.total"> {{item.total}}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="total" class="form-label">Total A pagar</label>
+      <input type="text" disabled class="form-control"  name="total" [(ngModel)]="datapago.total" id="total">
+    </div>
+    <div class="mb-3">
+      <button type="submit" id="pagar" class="btn btn-primary" (click)="confirmarPago()"[disabled]='disable'>Realizar Pago</button>
+    </div>
+  </div>
+</form>
+ 
+
+  
+    </div>
+  </div>
+ 

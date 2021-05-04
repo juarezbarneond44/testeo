@@ -1,0 +1,88 @@
+stages:
+  - release
+  - deploy
+  - releaseAngular
+  - deployAngular
+release:
+  stage: release
+  image: docker:latest
+  only: 
+    - "master"
+  tags:
+    - runner
+  before_script:
+ 
+  
+  variables:
+    DOCKER_REGISTRY: "docker.io"
+    DOCKER_TLS_CERTDIR: "/certs"
+  script: 
+ 
+    - docker login --username juanquis44 --password c009b3dd-d755-4df9-965b-080b48c391c2
+    - docker build -t "juanquis44/serveranalisis:latest"  ./server/
+    - docker push "juanquis44/serveranalisis:latest" 
+ 
+  after_script:
+    - docker logout
+releaseAngular:
+  stage: releaseAngular
+  image: docker:latest
+  only: 
+    - "master"
+  tags:
+    - runner
+  variables:
+    DOCKER_REGISTRY: "docker.io"
+    DOCKER_TLS_CERTDIR: "/certs"
+  script: 
+    - docker login --username juanquis44 --password c009b3dd-d755-4df9-965b-080b48c391c2
+    - docker build -t "juanquis44/angularanalisis:latest"  ./practica/
+    - docker push "juanquis44/angularanalisis:latest"
+  after_script:
+    - docker logout
+deploy:
+    stage: deploy
+    only:
+      - "master"
+    image: docker:latest
+   # environment:
+    #    name: production
+    #    url: http://3.140.189.248:5002/
+    tags:
+        - runner 
+    before_script:
+        - docker stop serveranalisis
+        - docker rm serveranalisis
+       
+    variables:
+      DOCKER_REGISTRY: "docker.io"
+      DOCKER_TLS_CERTDIR: "/certs"
+    script:
+        - docker login --username juanquis44 --password c009b3dd-d755-4df9-965b-080b48c391c2
+        - docker pull juanquis44/serveranalisis:latest
+        - docker run -d -p 0.0.0.0:5002:5002  --name=serveranalisis juanquis44/serveranalisis:latest
+    after_script:
+        - docker logout
+ 
+deployAngular:
+    stage: deployAngular
+    only:
+      - "master"
+    image: docker:latest
+    environment:
+    #    name: production
+    #    url: http://3.140.189.248:4200/
+    tags:
+        - runner 
+    before_script:
+        - docker stop angularanalisis
+        - docker rm angularanalisis
+  
+      
+    script:
+        - docker login --username juanquis44 --password c009b3dd-d755-4df9-965b-080b48c391c2
+        - docker pull juanquis44/angularanalisis:latest
+        - docker run -d -p 0.0.0.0:4200:4200  --name=angularanalisis juanquis44/angularanalisis:latest
+    after_script:
+        - docker logout
+ 

@@ -1,0 +1,23 @@
+<app-nav-bar></app-nav-bar>
+
+<div id="general">
+<table class="table table-dark">
+    <thead>
+    <tr>
+      <th *ngFor="let header of getHeaders()">{{header}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of ListaPagos; index as j">
+      <td *ngFor="let key of getHeaders();  index as i">
+          <div *ngIf= "key==='id'">
+            <button id="id{{item[key]}}" (click)="obtenerId(item[key]);">Detalle{{j}}</button>
+          </div>
+          <div *ngIf= "key!=='id'">
+            {{item[key]}}
+          </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
